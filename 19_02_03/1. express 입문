@@ -1,0 +1,22 @@
+express를 알기에 앞서 우리가 Nodejs를 이용해 웹 서버를 만들었던 기억이 있다.
+그걸 다시 한번 구현을 해보면
+
+const http = require('http');
+
+const port = 8080;
+const hostname = '127.0.0.1';
+
+const server = http.createServer( (req, res) => {
+    res.writeHead(200, {'Content-Type' : 'utf-8'});
+    res.end('Hello Server!')
+})
+server.listen(port, hostname, () => {
+    console.log('http://' + hostname + ':' + port + ' 로 서버가 열렸습니다!')
+})
+
+이렇게 간단한 코드만으로도 나만의 서버를 만들어 낼 수가 있다.
+그런데 이것보다 더 간단하게 만들 수 있는 라이브러리(프레임워크)인 'Express'가 있다.
+Express를 추가하는 방법은 'npm install express --save'로 추가할 수 있다.
+
+자세한 추가방법은 https://expressjs.com/ko/starter/installing.html 사이트를 참고하자.
+git init은 필수적인 명령어이므로 반드시 사용하도록 하자!

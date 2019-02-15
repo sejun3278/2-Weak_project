@@ -1,0 +1,89 @@
+앞서 우리는 express 모듈을 Node Package에 추가시켰다.
+이제 express를 사용할 수 있는 것이다.
+그럼 추가한 express를 이용해서 간단한 웹 에플리케이션을 만들어보자.
+
+자세한 내용들은 express 사이트에 
+https://expressjs.com/ko/starter/hello-world.html로 서술이 되어 있다.
+
+먼저 'app.js'란 파일을 하나 작성을 하자.
+이 app은 이 프로젝트 내에서 메인 파일이 될 것이다.
+
+// const express = require('express')
+   const app = express();
+
+   app.get('/', (req, res) => {
+       res.send('Hello?')
+   })
+
+   app.listen(3000, () => {
+       console.log('localhost:3000')
+   })
+
+이 코드는 express 모듈을 이용한 서버 구축 방법이다.
+앞서 우리가 Nodejs를 이용해 서버를 구축했던 방법과 크게 다르지 않는다.
+먼저 express 모듈을 require 함수를 이용해 불러왔고
+app 이라는 변수에 express 모듈을 실행해서 객체화를 했다.
+
+실제로 console.log(app)을 찍어보면
+무수히 많은 메소드들이 app이라는 객체에 담겨있는 것을 볼 수 있다.
+이 메소드들을 잘 보면 get이라는 메소드가 있는데
+HTTP 문법의 GET과 동일한 메소드이다.
+
+GET은 URL로 들어오는 유저들이 접근이 가능하도록 해주는 기능이 있는데
+인자값으로 첫번째에 받는 주소로만 접근이 가능하다.
+
+예를 들어, 첫번째 인자로 '/room'을 주면
+localhost:[port 번호]/room 으로만 접근이 가능하다.
+Nodejs 에서는 createServer로 구축이 가능했다면
+express에서는 get으로 구축이 가능하다.
+
+그 다음으로 req과 res가 콜백으로 들어오게 되고
+res.send라는 메소드를 통해 브라우저에 원하는 내용을 출력할 수 있다.
+
+그리고 get은 'router'라고도 하는데
+사전적인 용어로는 '길을 찾는다'로 해석이 된다.
+그리고 get이 하는 행위를 'routing'이라고 한다.
+
+이 구조를 잠깐 보자면
+사용자         -       router          -        controller
+이런 구조를 가지고 있다.
+이걸 우리가 작성했던 코드로 바꿔보자면
+
+user       ->         get('/')            -   send(data)
+로 바꿔볼 수 있다.
+
+즉 유저가 해당하는 주소(router)로 접근을 하면
+해당되는 router는 그에 맞는 controller를 브라우저에 보여주는 것이다.
+
+그럼 여기서 만약 내가 'login'이라는 페이지를 만들어서
+'Login please'라는 문구를 브라우저로 표시하고 싶다면 어떻게 할까?
+다음과 같은 코드를 작성하면 된다.
+
+app.get('/login', (req, res) => {
+    console.log('Login please');
+})
+
+그리고 주소창에 localhost:3000/login 으로 접속을 하면
+해당되는 문구가 출력되는 것을 확인할 수 있다.
+그리고 localhost:3000 을 다시 입력하면
+처음에 입력했던 문구도 확인할 수 있을 것이다.
+
+
+// fs 모듈을 함께 사용해서 text를 브라우저에 출력한 예시
+const express = require('express');
+const app = express();
+const fs = require('fs');
+
+app.get('/', (req, res) => {
+    fs.readFile('./hello', {encoding:'utf-8'}, (err, data) => {
+        if(err) {
+            console.log(err);
+            return;
+        }
+        res.send(data);
+    })
+})
+
+app.listen(3000, () => {
+    console.log('3000 포트로 서버에 연결되었습니다.')
+})

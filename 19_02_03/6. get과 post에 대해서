@@ -1,0 +1,126 @@
+우리는 앞서 get을 이용해 router를 정의하고
+서버로 요청과 응답을 받아오는 방식을 사용했다.
+즉, 사용자가 서버에게 데이터를 받아오기 위한
+방식이 바로 'get'을 사용한 방법이다.
+
+그렇다면 만약, 사용자의 정보를 서버에 저장하려면 어떻게 해야 할까?
+예를 들어 사용자가 로그인을 했을 때, 아이디와 비밀번호를
+서버로 전달하려고 한다면 어떠한 방법을 써야 할까?
+
+우리는 여기서 바로 HTTP의 문법 중 하나인 'POST'를 사용해서
+나의 정보를 서버에 전달해서 저장하게 할 수 있게 된다.
+그리고 여기서 'form'이란 태그를 사용할 것이다.
+
+먼저 'form'이란 jade를 생성한 후 적용시키는 코드를 작성하자.
+//   const express = require('express');
+     const app = express();
+
+     app.locals.pretty = true;
+     app.use(express.static('public'));
+     app.set('views engien', 'jade');
+     app.set('views', './views');
+
+     app.get('/form', (req, res) => {
+         res.render('form')
+     })
+
+     app.listen(3000, () => {
+         console.log('http://localhost:3000/from')
+     })
+
+이제, form이란 url로 들어가면 form의 jade가 적용된다.
+똑같이 form의 jade로 들어가서 기본 양식을 작성해보자.
+
+doctype html
+html
+    head
+    body
+
+먼저 기본 양식들을 먼저 넣고
+다음과 같은 코드들을 넣는다.
+
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        title Form
+    body
+        h1 This is Form!
+            form(action='/form_post')
+            p
+                input(type="text" name="title")
+            p
+                textarea(name="des")
+            p
+                input(type="submit")
+
+우리가 앞에 사용했던 jade 문법에서 뭔가 다른 점들이 보인다.
+먼저 괄호 안으로 무엇인가가 들어가기 시작하는데
+이것은 jade에서 해당 태그에게 속성 값을 부여할 때 사용한다.
+
+head의 meta에 'charset'이란 속성을 부여하고
+그 값으로 'utf-8'이란 값을 줘, 인코딩을 하는 작업을 완료했다.
+
+이 코드는 화면창에 두개의 텍스트창과 '제출'이라는 sumbit을 만들어내는데
+간단한 원리는 '제출'이란 버튼을 누르게 되면 텍스트창에 있는 모든 값이
+form의 action 속성에 담긴 'form_post'란 url로 넘어가게 된다.
+
+실제로 버튼을 누르게 되면 화면창이 바뀌면서 url에 query string이 추가되는데
+아직 우리는 'form_post'로 갈 수 있는 router를 만들지 않았기 때문에
+cannot 오류가 발생할 것이다.
+
+//   app.get('/form_post', (req, res) => {
+    
+})
+
+위와 같이 router를 구성을 해주면 제출을 누름과 동시에
+'form_post' url로 이동하게 되면서 텍스트의 name 값을 모두 가져간다.
+
+예를 들어, title 네임을 가진 텍스트창에 'hello'를 쓰고
+des 네임을 가진 텍스트창에 'world'를 치면
+해당 url에는 아마 http://localhost:3000/form_post?title="hello"&dev="world"
+라는 값이 나오게 될 것이다.
+
+그런데 여기서 중요한 것은 query string이 보이는 건 온전한 'Get' 방식이다.
+Get은 클라이언트(사용자)가 서버로부터 정보를 가져와야하기 때문에
+우리는 정보를 저장하는 Post를 써야 서버에 저장이 가능하다.
+
+form의 태그 속성에 다음과 같은 속성을 추가해보자.
+// form(action="/form_post" method="post")
+그리고나서 다시 실행을 해보면 cannot POST 오류가 뜨게 된다.
+POST 형식의 router를 찾을 수 없는 것이 이유이다.
+
+그렇다면 우리는 post 형식의 router를 하나 만들어주면 된다.
+// app.post('/form_post', (req, res) => {
+    res.send('Hello, form!')
+})
+위의 코드를 추가하고 제출 버튼을 클릭해보면
+url이 'form_post'로 넘어가면서 브라우저로 'Hello, form!'을 보여준다.
+그리고 눈으로 보이지는 않지만 내부적으로 우리가 텍스트창에 적은
+title과 des의 네임값들이 자동으로 넘어갔다.
+
+그렇다면 이제 그 값들을 브라우저내로 표현해볼 수 있지 않을까?
+아래와 같이 코드를 작성해보자.
+
+// app.post('/form_post', (req, res) => {
+    var title = req.body.title;
+    var des = req.body.description;
+    res.send(title + ',' + des);
+})
+
+그럼 이제 우리의 예상으로는 title에 'hello'와 des에 'world'를 적고
+제출버튼을 누르게 되면 url이 'form_post'로 넘어가면서
+화면에 'hello,wolrd'를 출력하게 될 것이라고 생각할 것이다.
+
+그런데 실제로 실행을 해보면 undefinde body라는 오류가 출력이 된다.
+req가 body라는 메소드를 찾을 수 없다고 나오는 것이다.
+이 부분은 'body-parser'라는 일종의 플러그인으로 해결할 수 있다.
+// https://www.npmjs.com/package/body-parser
+
+먼저 터미널창에 'npm install body-parser'로 body-parser를 설치하고
+'var bodyParser = require('body-parser')'로 'bodyParser'라는 변수에
+해당 모듈을 할당한다.
+
+그리고 'app.use(bodyParser.urlencoded({ extended: false }))' 코드를 작성하면
+이제 우리의 어플리케이션은 bodyParser라는 모듈을 사용 할 수 있게 됐다.
+그후 다시 제출 버튼을 누르면 정상적으로 서버에 저장되는 것을 확인할 수 있다.

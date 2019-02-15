@@ -1,0 +1,14 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title=_title
+    body
+        h1 form
+            form(action='/form_save' method="post")
+                p
+                    input(type="text" maxlength=10 name="title")
+                p
+                    textarea(name="description")
+                p
+                    input(type="submit")

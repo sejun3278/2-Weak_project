@@ -1,0 +1,41 @@
+관계형 데이터베이스란?
+ : 데이터를 구조화하고 저장해서 데이터 관리를 편리하게 해주는 기능이다.
+   그리고 'MySQL'은 관계형 데이터베이스이다.
+
+   SQL은 데이터베이스에서 데이터를 저장하거나 삭제 및 조회하기 위해 사용하는 언어이며
+   MySQL은 SQL을 사용한다.
+
+
+데이터 베이스의 생성
+ : 그렇다면 먼저 데이터베이스를 생성해보자.
+   데이터베이스는 현재 TIL 폴더에 있는 날짜들이라고 생각하면 된다.
+   많은 자료들을 담는 하나의 큰 디렉토리를 만든다는 느낌이다.
+
+   데이터베이스를 만드는 건 다음과 같다.
+   // CREATE DATABASE `[데이터베이스 이름]` CHARACTER SET utf8 COLLATE utf8_general_ci;
+   해당 명령어를 입력하면 'OK query'라는 명령어와 함께
+   내가 입력한 데이터베이스가 생성이 된다.
+
+   그렇다면 데이터베이스들을 조회하려면 어떻게 해야 할까?
+   // show databases;
+   를 입력하면 만들어진 데이터베이스들을 조회할 수 있다.
+
+   데이터베이스를 생성했으니 삭제하는 방법도 알아보자.
+   // drop database `[데이터베이스 이름]`
+   을 하면 해당 데이터베이스를 삭제할 수 있다.
+
+   그렇다면 데이터베이스 중에서 하나를 선택해서 그 데이터베이스를
+   사용하겠다고 컴퓨터에게 알려주는 명령어도 알아보자.
+   // use `[데이터베이스 이름]`
+   이제 우리는 해당 데이터베이스를 사용할 수 있게 되었다.
+
+   다음으로 넘어가기에 앞서 'home'과 'school'이라는 데이터베이스를 만들고
+   'home'이라는 데이터베이스는 삭제, 'school' 데이터베이스를 사용하는 코드를
+   작성해보자.
+
+   // create data home character utf8 collate utf8_general_ci;
+      create data school character utf8 collate utf8_general_ci;
+      show databases; // 'home'과 'school'이 추가된 걸 확인한다.
+
+      drop database home;
+      use school;
